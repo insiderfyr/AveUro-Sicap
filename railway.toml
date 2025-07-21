@@ -1,0 +1,25 @@
+[build]
+builder = "dockerFile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+restartPolicyType = "never"
+startCommand = "/app/start.sh"
+
+[[services]]
+name = "sicap-parser"
+
+[services.source]
+type = "git"
+
+[services.variables]
+NODE_ENV = "production"
+PORT = "3000"
+
+[services.healthcheck]
+path = "/api/elasticsearch-status"
+port = 3000
+
+[services.resources]
+memory = "2Gi"
+cpu = "1" 
