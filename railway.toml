@@ -7,19 +7,23 @@ restartPolicyType = "never"
 startCommand = "/app/start.sh"
 
 [[services]]
-name = "sicap-parser"
+name = "sicap-kibana"
 
 [services.source]
 type = "git"
 
 [services.variables]
 NODE_ENV = "production"
-PORT = "3000"
+PORT = "5601"
 
 [services.healthcheck]
-path = "/api/elasticsearch-status"
-port = 3000
+path = "/health"
+port = 8080
 
 [services.resources]
-memory = "2Gi"
-cpu = "1" 
+memory = "3Gi"
+cpu = "1"
+
+# Railway will automatically expose port 5601 for Kibana
+[services.networking]
+port = 5601 

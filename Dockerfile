@@ -17,9 +17,16 @@ RUN wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.11
     mv elasticsearch-8.11.1 /opt/elasticsearch && \
     rm elasticsearch-8.11.1-linux-x86_64.tar.gz
 
+# Download and install Kibana
+RUN wget https://artifacts.elastic.co/downloads/kibana/kibana-8.11.1-linux-x86_64.tar.gz && \
+    tar -xzf kibana-8.11.1-linux-x86_64.tar.gz && \
+    mv kibana-8.11.1 /opt/kibana && \
+    rm kibana-8.11.1-linux-x86_64.tar.gz
+
 # Create elasticsearch user
 RUN useradd -m elasticsearch && \
-    chown -R elasticsearch:elasticsearch /opt/elasticsearch
+    chown -R elasticsearch:elasticsearch /opt/elasticsearch && \
+    chown -R elasticsearch:elasticsearch /opt/kibana
 
 # Set working directory
 WORKDIR /app
@@ -36,15 +43,16 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Copy Elasticsearch configuration
+# Copy configurations
 COPY elasticsearch.yml /opt/elasticsearch/config/elasticsearch.yml
+COPY kibana.yml /opt/kibana/config/kibana.yml
 
 # Create startup script
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
 # Expose ports
-EXPOSE 3000 9200
+EXPOSE 5601 9200
 
 # Start script
 CMD ["/app/start.sh"] 

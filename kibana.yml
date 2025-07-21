@@ -1,0 +1,32 @@
+# Kibana is served by a back end server. This setting specifies the port to use.
+server.port: 5601
+
+# Specifies the address to which the Kibana server will bind. IP addresses and host names are both valid values.
+# The default is 'localhost', which usually means remote machines will not be able to connect.
+# To allow connections from remote users, set this parameter to a non-loopback address.
+server.host: "0.0.0.0"
+
+# The URLs of the Elasticsearch instances to use for all your queries.
+elasticsearch.hosts: ["http://localhost:9200"]
+
+# Elasticsearch from/to Kibana is unencrypted since we're in a container
+elasticsearch.ssl.verificationMode: none
+
+# Disable security features to match our Elasticsearch config
+xpack.security.enabled: false
+xpack.encryptedSavedObjects.encryptionKey: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+# Set the default index pattern
+kibana.defaultAppId: "discover"
+
+# Logging configuration
+logging.appenders.default:
+  type: console
+  layout:
+    type: json
+logging.root:
+  level: info
+
+# Performance settings for Railway
+elasticsearch.requestTimeout: 30000
+elasticsearch.shardTimeout: 30000 
