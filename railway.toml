@@ -7,7 +7,7 @@ restartPolicyType = "never"
 startCommand = "/app/start.sh"
 
 [[services]]
-name = "sicap-kibana"
+name = "sicap-kibana-secure"
 
 [services.source]
 type = "git"
@@ -15,6 +15,7 @@ type = "git"
 [services.variables]
 NODE_ENV = "production"
 PORT = "5601"
+# Elastic password will be auto-generated
 
 [services.healthcheck]
 path = "/health"

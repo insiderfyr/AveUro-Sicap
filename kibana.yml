@@ -9,11 +9,15 @@ server.host: "0.0.0.0"
 # The URLs of the Elasticsearch instances to use for all your queries.
 elasticsearch.hosts: ["http://localhost:9200"]
 
+# Elasticsearch authentication - will be set by startup script
+elasticsearch.username: "elastic"
+elasticsearch.password: "${ELASTIC_PASSWORD}"
+
 # Elasticsearch from/to Kibana is unencrypted since we're in a container
 elasticsearch.ssl.verificationMode: none
 
-# Disable security features to match our Elasticsearch config
-xpack.security.enabled: false
+# Enable security features
+xpack.security.enabled: true
 xpack.encryptedSavedObjects.encryptionKey: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
 # Set the default index pattern
