@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(express.json());
@@ -18,7 +18,8 @@ app.get('/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     service: 'SICAP Parser',
-    version: '1.0.0'
+    version: '1.0.0',
+    port: PORT
   });
 });
 
@@ -30,7 +31,8 @@ app.get('/api/status', (req, res) => {
       health: '/health',
       status: '/api/status'
     },
-    note: 'This is a simplified version for Railway deployment. Elasticsearch and Kibana services need to be configured separately.'
+    port: PORT,
+    note: 'This is a simplified version for production deployment. Elasticsearch and Kibana services need to be configured separately.'
   });
 });
 
@@ -40,6 +42,7 @@ app.get('/', (req, res) => {
     message: 'SICAP Parser - Parser pentru licitații SICAP',
     description: 'Focus pe vehicule electrice și stații de încărcare',
     version: '1.0.0',
+    port: PORT,
     endpoints: {
       health: '/health',
       api: '/api/status'
@@ -47,9 +50,19 @@ app.get('/', (req, res) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
+// Start server with error handling
+const server = app.listen(PORT, () => {
   console.log(`🚀 SICAP Parser server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
   console.log(`🔗 API status: http://localhost:${PORT}/api/status`);
+});
+
+// Error handling
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${PORT} is already in use. Please try a different port.`);
+    process.exit(1);
+  } else {
+    console.error('❌ Server error:', error);
+  }
 }); 
